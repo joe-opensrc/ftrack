@@ -23,11 +23,11 @@ ft-init(){
 
 ft(){
 
-  local init=1
+  local ftinit=1
   local ftcmd="${1}"; shift
 
   case "${ftcmd}" in
-    init) ft-init "${@}";;
+    ftinit) ft-init "${@}";;
        *) echo 'usage: tf init';;
   esac
 }
