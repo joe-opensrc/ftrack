@@ -11,4 +11,10 @@
         - used to recover orig filename
   - uses inode to track files (=> limited to single-filesys):
       - find -mindepth 1 -maxdepth 1 -printf '%i|%f\n' >.orig-names.lst
+  - creates: .ftrack folder
 
+  actions:
+    - create .ftrack folder
+    - cd in, and git init
+    - for each filesys object create a txt file containing it's inode, using the current file name 
+    - commit to git
