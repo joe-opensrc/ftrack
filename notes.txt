@@ -19,8 +19,5 @@
     - for each filesys object create a txt file containing it's inode, using the current file name 
     - commit to git
 
-  question arrises:
-    should it be it's own executable?
-  
   handle sub-.ftrack folder? a tree of trees ? lol
   
