@@ -6,8 +6,8 @@
       commit where inode is first added counts as the original file name and gets a tag:
         - lol
         - number of tags 2*no.of.files
-        - if tag: inode-orig doesn't exist then file first reference to file and create tag + warn user
+        - if tag: inode-orig doesn't exist then file first reference to file and create tag + warn user:
+            git log --follow --first-parent --diff-filter=A --format='format:%h' -- "${fname}"
         - used to recover orig filename
-  - uses inode to track files (limited to single-filesys)
-  -   
-
+  - uses inode to track files (=> limited to single-filesys)
+  -  
