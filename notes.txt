@@ -9,5 +9,6 @@
         - if tag: inode-orig doesn't exist then file first reference to file and create tag + warn user:
             git log --follow --first-parent --diff-filter=A --format='format:%h' -- "${fname}"
         - used to recover orig filename
-  - uses inode to track files (=> limited to single-filesys)
-  -  
+  - uses inode to track files (=> limited to single-filesys):
+      - find -mindepth 1 -maxdepth 1 -printf '%i|%f\n' >.orig-names.lst
+
