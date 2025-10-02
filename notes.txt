@@ -1,0 +1,13 @@
+<2025-10-02 [20:41:02]>
+  crazy bash project #33701 ;)
+  
+  - file name tracker
+  - uses git to remember history:
+      commit where inode is first added counts as the original file name and gets a tag:
+        - lol
+        - number of tags 2*no.of.files
+        - if tag: inode-orig doesn't exist then file first reference to file and create tag + warn user
+        - used to recover orig filename
+  - uses inode to track files (limited to single-filesys)
+  -   
+
