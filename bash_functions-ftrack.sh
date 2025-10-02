@@ -1,5 +1,35 @@
 #!/bin/bash
 
-ft(){
+ft-tidyup(){
+  unset GIT_DIR
+}
+
+ft-init(){
+  
+  mkdir -p .ftrack
+  export GIT_DIR=.ftrack/.git
+  local gname="$( id -gn )"
+  # mkdir -p .ftrack
+  # cd .ftrack
+  git init .
+
+  git config user.name  "${USER}"
+  git config user.email "${USER}:${gname}"
+
+  git config author.name  "${USER}"
+  git config author.email "${USER}:${gname}"
 
 }
+
+ft(){
+
+  local init=1
+  local ftcmd="${1}"; shift
+
+  case "${ftcmd}" in
+    init) ft-init "${@}";;
+       *) echo 'usage: tf init';;
+  esac
+}
+
+ft
