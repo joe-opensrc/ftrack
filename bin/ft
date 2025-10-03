@@ -89,7 +89,7 @@ ft-status(){
   if [[ ${ntfs} -gt 0 ]]
   then
     cd "${FT_DIR}"
-    grep -h . $( GIT_DIR=".git" git ls-files -- "${inodesdir}" ) | sed -e 's/^/  /'
+    grep -h . $( GIT_DIR=".git" git ls-files -- "${inodesdir}" ) | sort -t':' -k 2 -V | sed -e 's/^/  /'
     echo
   fi
 # set +x
