@@ -1,24 +1,98 @@
 #!/bin/bash
 
-ft-tidyup(){
-  unset GIT_DIR
+FT_DIR=".ftrack"
+GIT_WORK_TREE="${FT_DIR}"
+GIT_DIR="${FT_DIR}/.git"
+
+FT_ROOT_DIR="${PWD}"
+FT_CHECK_FOR_DIR=0
+
+export FT_DIR GIT_DIR GIT_WORK_TREE
+
+ft-assert-dir(){
+  if [[ ! -d "${FT_DIR}" ]]
+  then
+    # check pwd != FT_DIR
+      echo "No .ftrack dir found here; you probably want to run 'ft init'"
+    exit 1
+  fi
 }
 
 ft-init(){
   
-  mkdir -p .ftrack
-  export GIT_DIR=.ftrack/.git
+  # local thisdir="${PWD}"
+
+  mkdir -p "${FT_DIR}/inodes"
+
+  rinode=$( stat --printf '%i' "${PWD}" ) 
+  firstfile="rootdir.${rinode}"
+  echo ${PWD} >"${FT_DIR}/${firstfile}"
+
   local gname="$( id -gn )"
   # mkdir -p .ftrack
-  # cd .ftrack
-  git init .
+  # cd "${FT_DIR}"
+  git init 
 
   git config user.name  "${USER}"
   git config user.email "${USER}:${gname}"
 
   git config author.name  "${USER}"
   git config author.email "${USER}:${gname}"
+  # echo ·$( realpath ${FT_DIR} )·
+  
+  git add "${firstfile}" 
+  git commit -m "You started tracking filenames in: ${FT_ROOT_DIR}!" . 
+  # cd -
+}
 
+
+
+ft-add(){
+  # set -x
+
+  local rootdir=$( realpath "${FT_ROOT_DIR}" )
+  if [[ -d ${FT_DIR} ]]
+  then
+    IFS='|' 
+      while read -d '' inode pname
+      do
+        # echo "~${FT_ROOT_DIR}~"
+        nname="${pname##${rootdir}/}"
+        nname="${nname##./}"
+        # echo "r:${rootdir}"
+        # echo "i:${inode}" 
+        # echo "p:${pname}"
+        # echo "n:${nname}"
+        ofile="inodes/${inode}"
+        echo -n "${nname}" >"${FT_DIR}/${ofile}"
+        git add "${ofile}"
+      done < <( find "${@}" -path './.ftrack' -prune -o \( -type f -printf '%i|%p\0' \) )
+    IFS=$' \t\n'
+  
+    ilist="$( git diff --staged --name-status )"
+    git commit . -m "added name change" -m "${ilist}"
+
+  else
+    ft-assert-dir
+  fi
+}
+
+ft-status(){
+# set -x
+  inodesdir="inodes"
+  ntfs="$( ls -1 "${FT_DIR}/${inodesdir}" | wc -l )"
+
+  echo -ne "ftrack:\n\n"
+  echo -ne "  Loc: ${PWD}\n"
+  echo -ne "  No. Of Tracked Files: ${ntfs}\n\n"
+
+  if [[ ${ntfs} -gt 0 ]]
+  then
+    cd "${FT_DIR}"
+    grep -h . $( GIT_DIR=".git" git ls-files -- "${inodesdir}" ) | sed -e 's/^/  /'
+    echo
+  fi
+# set +x
 }
 
 ft(){
@@ -27,9 +101,13 @@ ft(){
   local ftcmd="${1}"; shift
 
   case "${ftcmd}" in
-    ftinit) ft-init "${@}";;
-       *) echo 'usage: tf init';;
+      init)   ft-init "${@}";;
+       add)    ft-add "${@}";;
+    status) ft-status "${@}";;
+       *) echo 'usage: tf [init|add]';;
   esac
+
+  # echo "·${#}: ${@}·"
 }
 
-ft
+ft "${@}"
