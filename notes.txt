@@ -11,6 +11,7 @@
         - used to recover orig filename
   - uses inode to track files (=> limited to single-filesys):
       - find -mindepth 1 -maxdepth 1 -printf '%i|%f\n' >.orig-names.lst
+        find . -path './.ftrack' -prune -o -printf '%i|%p\n' 
   - creates: .ftrack folder
 
   actions:
