@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash 
 
 FT_DIR=".ftrack"
 GIT_WORK_TREE="${FT_DIR}"
@@ -19,7 +19,7 @@ ft-assert-dir(){
 }
 
 ft-init(){
-  
+ 
   # local thisdir="${PWD}"
 
   mkdir -p "${FT_DIR}/inodes"
@@ -39,7 +39,7 @@ ft-init(){
   git config author.name  "${USER}"
   git config author.email "${USER}:${gname}"
   # echo ·$( realpath ${FT_DIR} )·
-  
+ 
   git add "${firstfile}" 
   git commit -m "You started tracking filenames in: ${FT_ROOT_DIR}!" . 
   # cd -
@@ -68,7 +68,7 @@ ft-add(){
         git add "${ofile}"
       done < <( find "${@}" -path './.ftrack' -prune -o \( -type f -printf '%i|%p\0' \) )
     IFS=$' \t\n'
-  
+ 
     ilist="$( git diff --staged --name-status )"
     git commit . -m "added name change" -m "${ilist}"
 
