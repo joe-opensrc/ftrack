@@ -95,6 +95,16 @@ ft-status(){
 # set +x
 }
 
+ft-hist(){
+  # for now get last name 
+  if [[ -f "${1}" && $( git ls-files --error-unmatch ) ]]
+  then
+    inode=$( stat --printf '%i' "${1}" )
+    git show $(git log --diff-filter=A --format='format:%h' -- inodes/"${inode}" ):inodes/"${inode}" 
+    # git show $(git log --diff-filter=M -n 1 --format='format:%h' -- inodes/"${inode}" )~1:inodes/"${inode}" 
+  fi
+}
+
 ft(){
 
   local ftinit=1
@@ -103,6 +113,7 @@ ft(){
   case "${ftcmd}" in
       init)   ft-init "${@}";;
        add)    ft-add "${@}";;
+      hist)   ft-hist "${@}";;
     status) ft-status "${@}";;
        *) echo 'usage: tf [init|add]';;
   esac
