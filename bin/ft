@@ -109,6 +109,14 @@ ft-hist(){
   fi
 }
 
+ft-rename(){
+  #technically a revert as it grabs only first name
+  # use git to manage state: use checkout, revert, etc
+  oname=$( ft-hist "${1}" )
+  mv -i "${1}" "${oname}"
+  ft-add "${oname}"
+}
+
 ft(){
 
   local ftinit=1
