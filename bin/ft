@@ -123,10 +123,11 @@ ft(){
   local ftcmd="${1}"; shift
 
   case "${ftcmd}" in
-      init)   ft-init "${@}";;
-       add)    ft-add "${@}";;
-      hist)   ft-hist "${@}";;
-    status) ft-status "${@}";;
+      init|i)   ft-init "${@}";;
+       add|a)    ft-add "${@}";;
+      hist|h)   ft-hist "${@}";;
+    status|st) ft-status "${@}";;
+    rename|re) ft-rename "${@}";;
        *) echo 'usage: tf [init|add]';;
   esac
 
