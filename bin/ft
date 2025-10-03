@@ -97,10 +97,14 @@ ft-status(){
 
 ft-hist(){
   # for now get last name 
-  if [[ -f "${1}" && $( git ls-files --error-unmatch ) ]]
+  if [[ -e "${1}"  ]]
   then
     inode=$( stat --printf '%i' "${1}" )
-    git show $(git log --diff-filter=A --format='format:%h' -- inodes/"${inode}" ):inodes/"${inode}" 
+    # echo "·$1|$inode·"
+    if [[ $( git ls-files --error-unmatch "inodes/${inode}" ) ]]
+    then
+      PAGER= git show $(git log --diff-filter=A --format='format:%h' -- inodes/"${inode}" ):inodes/"${inode}" 
+    fi
     # git show $(git log --diff-filter=M -n 1 --format='format:%h' -- inodes/"${inode}" )~1:inodes/"${inode}" 
   fi
 }
