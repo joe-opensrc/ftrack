@@ -50,10 +50,11 @@ ft-init(){
 ft-add(){
   # set -x
 
+  local -a finfo=()
   local rootdir=$( realpath "${FT_ROOT_DIR}" )
   if [[ -d ${FT_DIR} ]]
   then
-    IFS='|' 
+    IFS=$'|' 
       while read -d '' inode pname
       do
         # echo "~${FT_ROOT_DIR}~"
@@ -64,13 +65,16 @@ ft-add(){
         # echo "p:${pname}"
         # echo "n:${nname}"
         ofile="inodes/${inode}"
+        oname=$( cat "${FT_DIR}/${ofile}" )
         echo -n "${nname}" >"${FT_DIR}/${ofile}"
+        finfo+=( "${inode} := ${oname:-adding...} -> ${nname}\n" )
         git add "${ofile}"
       done < <( find "${@}" -path './.ftrack' -prune -o \( -printf '%i|%p\0' \) )
     IFS=$' \t\n'
  
-    ilist="$( git diff --staged --name-status )"
-    git commit . -m "added name change" -m "${ilist}"
+    # ilist="$( git diff --staged --name-status )"
+    # wierd newline issues passing to 'git commit -m'
+    git commit . -m "added name change" -m "$( echo -e ${finfo[@]} )" #"${ilist}"
 
   else
     ft-assert-dir
@@ -88,17 +92,31 @@ ft-inode(){
 
 ft-status(){
 # set -x
+#
   inodesdir="inodes"
-  ntfs="$( ls -1 "${FT_DIR}/${inodesdir}" | wc -l )"
+  ntfs=$( ls -1 "${FT_DIR}/${inodesdir}" | wc -l )
+  if [[ ${#} -gt 0 ]]
+  then
+    inode=$( ft-inode "${1}" )
+    ntgts=1
+    ftgt="${inodesdir}/${inode}"
+    ninfo="${ntgts}/${ntfs}"
+  else
+    ntgts=${ntfs}
+    ftgt="${inodesdir}"
+    ninfo="${ntgts}"
+  fi
 
   echo -ne "ftrack:\n\n"
   echo -ne "  Loc: ${PWD}\n"
-  echo -ne "  No. Of Tracked Files: ${ntfs}\n\n"
+  echo -ne "  No. Of Tracked Files: ${ninfo}\n\n"
 
+  # make while read loop; if working_name != last known file
+  # here we are re-introducing the idea of working/staging/repo
   if [[ ${ntfs} -gt 0 ]]
   then
     cd "${FT_DIR}"
-    grep -h . $( GIT_DIR=".git" git ls-files -- "${inodesdir}" ) | sort -t':' -k 2 -V | sed -e 's/^/  /'
+    grep -h . $( GIT_DIR=".git" git ls-files -- "${ftgt}" ) | sort -t':' -k 2 -V | sed -e 's/^/  /'
     echo
   fi
 # set +x
