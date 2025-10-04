@@ -109,6 +109,13 @@ ft-hist(){
   fi
 }
 
+# convenience method 
+ft-move(){
+  ft-add "${1}" &>/dev/null
+  mv "${1}" "${2}"
+  ft-add "${2}"
+}
+
 ft-rename(){
   #technically a revert as it grabs only first name
   # use git to manage state: use checkout, revert, etc
@@ -128,6 +135,7 @@ ft(){
       hist|h)   ft-hist "${@}";;
     status|st) ft-status "${@}";;
     rename|re) ft-rename "${@}";;
+      move|mv) ft-move   "${@}";;
        *) echo 'usage: tf [init|add]';;
   esac
 
