@@ -12,11 +12,15 @@ the user to record pathname changes over time.
 Caveats:
 
 USE AS-IS\
+
 It has only received minimal testing;\
-it's a midly useful "vanity project",\
+it's a midly useful "folly project",\
 backup your files if unsure ;D
 
-Deletions are tricky to handle, so be sparing on those for now...
+When adding files, they automaticall get commited into git,
+so the name is slightly disingenuous ;)
+
+Deletions are tricky to handle, so be sparing with those for now...
 
 USAGE:
 ```
