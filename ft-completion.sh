@@ -5,7 +5,7 @@ _ft(){
   _init_completion || return;
 
   case "${prev}" in
-    ft) COMPREPLY=( $( compgen -W "init add hist status rename" -- ${cur} ) );;
+    ft) COMPREPLY=( $( compgen -W "init add hist status rename mv" -- ${cur} ) );;
     *) _comp_compgen_filedir; return;;
   esac
 }
