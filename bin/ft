@@ -57,17 +57,34 @@ ft-add(){
     IFS=$'|' 
       while read -d '' inode pname
       do
+
+        ofile="inodes/${inode}"
+        # ( this should probs be a git-based check ;))
+        # if an entry exists;       
+        if [[ -f "${FT_DIR}/${ofile}" ]]
+        then
+          oname=$( cat "${FT_DIR}/${ofile}" )
+          oname="${oname} ->"
+        else
+          oname="addding file:" 
+        fi
+
+        # new-name, ie. strip long basename part
+        # and / or './'
         nname="${pname##${rootdir}/}"
         nname="${nname##./}"
-        ofile="inodes/${inode}"
-        oname=$( cat "${FT_DIR}/${ofile}" )
+       
+        # save new name as contents of inode file
         echo -n "${nname}" >"${FT_DIR}/${ofile}"
-        finfo+=( "${inode} := ${oname:-adding...} -> ${nname}\n" )
+
+        # record message using for commit message
+        finfo+=("${oname} ${nname}\n")
         git add "${ofile}"
+
       done < <( find "${@}" -path './.ftrack' -prune -o \( -printf '%i|%p\0' \) )
     IFS=$' \t\n'
  
-    # wierd newline issues passing to 'git commit -m'
+    # wierd newline issues passing to 'git commit -m' WIP
     git commit . -m "added name change" -m "$( echo -e ${finfo[@]} )" #"${ilist}"
 
   else
