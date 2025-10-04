@@ -3,7 +3,11 @@
 _ft(){
   local cur prev words cword;
   _init_completion || return;
-  COMPREPLY=( $( compgen -W "init add hist status rename" -- ${cur} ) )
+
+  case "${prev}" in
+    ft) COMPREPLY=( $( compgen -W "init add hist status rename" -- ${cur} ) );;
+    *) _comp_compgen_filedir; return;;
+  esac
 }
 
 complete -F _ft ft
