@@ -1,6 +1,6 @@
 ### ftrack -- a file rename tracker
 
-This simultaneously "apes" and uses Git,\ 
+This simultaneously "apes" and uses Git,\
 to record and manage path name changes.
 
 It creates a hidden folder: .ftrack\
