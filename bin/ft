@@ -143,9 +143,9 @@ ft(){
   local ftcmd="${1}"; shift
 
   case "${ftcmd}" in
-      init|i)   ft-init "${@}";;
-       add|a)    ft-add "${@}";;
-      hist|h)   ft-hist "${@}";;
+       init|i) ft-init   "${@}";;
+        add|a) ft-add    "${@}";;
+       hist|h) ft-hist   "${@}";;
     status|st) ft-status "${@}";;
     rename|re) ft-rename "${@}";;
       move|mv) ft-move   "${@}";;
