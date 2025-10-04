@@ -9,10 +9,14 @@ and therein instantiates a git repo.
 Then using the inode as a pivot, it allows\
 the user to record pathname changes over time.
 
+Caveats:
+
 USE AS-IS\
 It has only received minimal testing;\
 it's a midly useful "vanity project",\
-backup your files if unsure ;D\
+backup your files if unsure ;D
+
+Deletions are tricky to handle, so be sparing on those for now...
 
 USAGE:
 ```
