@@ -109,6 +109,10 @@ ft-hist(){
   fi
 }
 
+ft-git()(
+  git "${@}"
+)
+
 # convenience method 
 ft-move(){
   ft-add "${1}" &>/dev/null
@@ -136,6 +140,7 @@ ft(){
     status|st) ft-status "${@}";;
     rename|re) ft-rename "${@}";;
       move|mv) ft-move   "${@}";;
+        git|g) ft-git    "${@}";;
        *) echo 'usage: tf [init|add]';;
   esac
 
