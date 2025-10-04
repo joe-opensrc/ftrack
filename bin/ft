@@ -77,6 +77,15 @@ ft-add(){
   fi
 }
 
+ft-statx(){
+  # placeholder function
+  # ft-statx --inode
+  stat --printf '%i' "${2}"
+}
+ft-inode(){
+  ft-statx --inode "${1}"
+}
+
 ft-status(){
 # set -x
   inodesdir="inodes"
