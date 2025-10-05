@@ -5,6 +5,8 @@ GIT_WORK_TREE="${FT_DIR}"
 GIT_DIR="${FT_DIR}/.git"
 
 FT_ROOT_DIR="${PWD}"
+# set the inodes dir, possibly via env var
+FT_INODES_DIR="${FT_INODES_DIR:-${FT_DIR}/inodes}"
 FT_CHECK_FOR_DIR=0
 
 export FT_DIR GIT_DIR GIT_WORK_TREE
@@ -21,8 +23,7 @@ ft-assert-dir(){
 ft-init(){
  
   # local thisdir="${PWD}"
-
-  mkdir -p "${FT_DIR}/inodes"
+  mkdir -p "${FT_INODES_DIR}"
 
   rinode=$( stat --printf '%i' "${PWD}" ) 
   firstfile="rootdir.${rinode}"
