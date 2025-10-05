@@ -27,7 +27,7 @@ ft-init(){
 
   rinode=$( stat --printf '%i' "${PWD}" ) 
   firstfile="rootdir.${rinode}"
-  echo ${PWD} >"${FT_DIR}/${firstfile}"
+  echo "${PWD}" | tee "${FT_DIR}/${firstfile}" "${FT_INODES_DIR}/${rinode}"
 
   local gname="$( id -gn )"
   # mkdir -p .ftrack
@@ -41,7 +41,7 @@ ft-init(){
   git config author.email "${USER}:${gname}"
   # echo ·$( realpath ${FT_DIR} )·
  
-  git add "${firstfile}" 
+  git add "${firstfile}" inodes/
   git commit -m "You started tracking filenames in: ${FT_ROOT_DIR}!" . 
   # cd -
 }
