@@ -136,16 +136,42 @@ ft-status(){
 
 ft-hist(){
   # for now get last name 
-  if [[ -e "${1}"  ]]
+  # if the input path exists 
+  # normalize, normalize
+  if [[ -e "${1}" ]]
   then
+    # return inode from fs
     inode=$( stat --printf '%i' "${1}" )
-    # echo "·$1|$inode·"
-    if [[ $( git ls-files --error-unmatch "inodes/${inode}" ) ]]
+  else
+    # probs been deleted (or some other bug)
+    # find "orphaned" inode file
+    revlookup=$( grep -r -l "^${1}$" ${FT_DIR}/inodes/ )
+    if [[ -n "${revlookup}" ]]
     then
-      PAGER= git show $(git log --diff-filter=A --format='format:%h' -- inodes/"${inode}" ):inodes/"${inode}" 
+      # take inode from filename: .ftrack/inodes/<inode>
+      inode=$( echo "${revlookup}" | cut -d'/' -f 3 )
+      # warn user:
+      echo -ne "We found an orphaned inode ($inode) for: \"${1}\"\n  you might want to ft rmi ...\n\n" >&2
     fi
     # git show $(git log --diff-filter=M -n 1 --format='format:%h' -- inodes/"${inode}" )~1:inodes/"${inode}" 
   fi
+
+    notrack="We (git) couldn't find a tracked entry for: ${1}\n  You might try: ft add ...\n\n"
+    if [[ -n "${inode}" ]]
+    then
+      ifound=$( git ls-files --error-unmatch "inodes/${inode}" 2>/dev/null )
+      if [[ -n "${ifound}" ]]
+      then
+        PAGER= git show $(git log --diff-filter=A --format='format:%h' -- inodes/"${inode}" ):inodes/"${inode}" 
+      else
+        echo -ne "${notrack}"
+      fi
+    else
+      echo -ne "${notrack}"
+    fi
+    # git show $(git log --diff-filter=M -n 1 --format='format:%h' -- inodes/"${inode}" )~1:inodes/"${inode}" 
+  
+set +x
 }
 
 ft-git()(
