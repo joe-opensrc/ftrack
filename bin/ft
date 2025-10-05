@@ -50,7 +50,6 @@ ft-init(){
 
 ft-add(){
   # set -x
-
   local -a finfo=()
   local rootdir=$( realpath "${FT_ROOT_DIR}" )
   if [[ -d ${FT_DIR} ]]
@@ -67,7 +66,7 @@ ft-add(){
           oname=$( cat "${FT_DIR}/${ofile}" )
           oname="${oname} ->"
         else
-          oname="addding file:" 
+          oname="adding file:" 
         fi
 
         # new-name, ie. strip long basename part
@@ -83,10 +82,10 @@ ft-add(){
         git add "${ofile}"
 
       done < <( find "${@}" -path './.ftrack' -prune -o \( -printf '%i|%p\0' \) )
-    IFS=$' \t\n'
  
     # wierd newline issues passing to 'git commit -m' WIP
-    git commit . -m "added name change" -m "$( echo -e ${finfo[@]} )" #"${ilist}"
+    git commit . -F <( echo -ne "added name change\n\n${finfo[@]}" )  #"${ilist}"
+    IFS=$' \t\n'
 
   else
     ft-assert-dir
